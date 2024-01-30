@@ -11,6 +11,7 @@ import {
     state, tableHeader,
     tbody
 } from "./constants.js";
+import {FORM_MODE} from "../local-storage-constants.js";
 
 
 buttonNext.addEventListener('click', () => {
@@ -157,7 +158,7 @@ addFilterButton.addEventListener('click', (e) => {
 
 buttonCreateContact.addEventListener('click', (e) => {
     // save state
-    localStorage.setItem('contact-edit', JSON.stringify({'mode': 'create'}));
+    localStorage.setItem(FORM_MODE, JSON.stringify({'mode': 'create'}));
     // redirect
     window.location.href = 'contact-edit.html';
 });

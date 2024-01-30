@@ -3,18 +3,35 @@ import {validateEmail, validatePassword, validateMinLength, validateTel, validat
 const inputsContainer = document.getElementById('inputs-container');
 const loginButton = document.getElementById('login-button');
 
+function updateUIOnError(input, message) {
+    input.classList.add('touched');
+    input.nextElementSibling.textContent = message;
+    input.nextElementSibling.classList.remove('hidden');
+    input.dataset.valid = 'false';
+}
+
+function updateUiOnSuccess(input) {
+    input.classList.remove('touched');
+    input.nextElementSibling.classList.add('hidden');
+    input.dataset.valid = 'true'
+}
+
+function resetUIOnSuccess(input) {
+    input.classList.remove('touched');
+    input.nextElementSibling.classList.add('hidden');
+    input.nextElementSibling.textContent = '';
+    input.dataset.valid = 'true';
+}
+
+
 inputsContainer.addEventListener('blur', (e) => {
     const input = e.target.closest('input');
     if (!input) return;
 
     const isValid = validateInput(input);
 
-    if (!isValid.valid && input.dataset.touched !== 'true') {
-        input.classList.add('touched');
-        input.nextElementSibling.textContent = isValid.message;
-        input.nextElementSibling.classList.toggle('hidden');
-        input.dataset.valid = 'false';
-    }
+    if (!isValid.valid && input.dataset.touched !== 'true') updateUIOnError(input, isValid.message)
+
     input.dataset.touched = 'true';
 }, true);
 
@@ -24,18 +41,11 @@ inputsContainer.addEventListener('input', (e) => {
 
     const isValid = validateInput(input);
     if (isValid.valid) {
-        input.classList.remove('touched');
-        input.nextElementSibling.classList.add('hidden');
-        input.dataset.valid = 'true'
+        updateUiOnSuccess(input);
         return;
     }
 
-    if (!isValid.valid && input.dataset.touched === 'true') {
-        input.classList.add('touched');
-        input.nextElementSibling.classList.remove('hidden');
-        input.nextElementSibling.textContent = isValid.message;
-        input.dataset.valid = 'false';
-    }
+    if (!isValid.valid && input.dataset.touched === 'true') updateUIOnError(input, isValid.message)
 })
 
 function validateRepeatedPassword([mainPassword, repeatedPassword], currentInputBeingTyped) {
@@ -52,17 +62,48 @@ function validateRepeatedPassword([mainPassword, repeatedPassword], currentInput
     };
 }
 
-function validatePasswordAndCheckMatchesRepeatedPassword([mainPassword, repeatedPassword]) {
-    const isMainPassword = validatePassword(mainPassword.value);
-    const areBothPasswordTheSame = mainPassword.value === repeatedPassword.value;
-    if (areBothPasswordTheSame) return isMainPassword;
+function checkBothPasswordMatch([mainPassword, repeatedPassword]) {
+    // const mainPasswordValidation = validatePassword(mainPassword.value);
+    // const areBothPasswordTheSame = mainPassword.value === repeatedPassword.value;
+    // if (areBothPasswordTheSame) return mainPasswordValidation;
+    //
+    // if (!mainPasswordValidation.valid) return mainPasswordValidation
+    //
+    // return {
+    //     valid: false,
+    //     message: 'Las contraseñas no coinciden'
+    // };
 
-    if (!isMainPassword.valid) return isMainPassword
+    return mainPassword.value === repeatedPassword.value;
+}
 
-    return {
-        valid: false,
-        message: 'Las contraseñas no coinciden'
-    };
+function handleValidationForPassword(currentPasswordBeingTyped, {mainPassword, repeatedPassword}) {
+    const areBothPasswordSame = checkBothPasswordMatch([mainPassword, repeatedPassword]);
+    const mainPasswordValidation = validatePassword(mainPassword.value);
+    if (currentPasswordBeingTyped === mainPassword) {
+        if (!mainPasswordValidation.valid) return mainPasswordValidation;
+        if (!areBothPasswordSame && repeatedPassword.dataset.touched !== 'true') return mainPasswordValidation;
+        if (!areBothPasswordSame) {
+            updateUIOnError(repeatedPassword, 'Las contraseñas no coinciden');
+            return mainPasswordValidation;
+        }
+
+        // update UI of the other password input
+        resetUIOnSuccess(repeatedPassword);
+        return mainPasswordValidation;
+    }
+
+    // now we know that the current input being typed is the repeated password
+    const repeatedPasswordValidation = validateRepeatedPassword([mainPassword, repeatedPassword], currentPasswordBeingTyped);
+    if (!repeatedPasswordValidation.valid) return repeatedPasswordValidation;
+
+    if (!mainPasswordValidation.valid) return mainPasswordValidation;
+
+    // now we know that the repeated password is valid and so is the main password
+    // basically updates the UI of the other password input
+    resetUIOnSuccess(mainPassword)
+    return repeatedPasswordValidation;
+    // }
 }
 
 function validateInput(input) {
@@ -73,40 +114,11 @@ function validateInput(input) {
         if (input.type === 'tel') return validateTel(input.value);
     }
     if (input.type === 'email') return validateEmail(input.value);
-    if (input.type === 'password') {
-
-        const [mainPassword, repeatedPassword] = [...section.querySelectorAll('input[type="password"]')];
-        if (input === mainPassword) {
-            const validity = validatePasswordAndCheckMatchesRepeatedPassword([mainPassword, repeatedPassword]);
-            if (!validity.valid) return validity;
-
-            // update UI of the other password input
-            repeatedPassword.classList.remove('touched');
-            repeatedPassword.nextElementSibling.classList.add('hidden');
-            repeatedPassword.nextElementSibling.textContent = '';
-            repeatedPassword.dataset.valid = 'true';
-            return validity;
-        }
-
-        const isRepeatedPassword = validateRepeatedPassword([mainPassword, repeatedPassword], input);
-        if (!isRepeatedPassword.valid) return isRepeatedPassword;
-
-        const isMainPassword = validatePassword(mainPassword.value);
-        if (!isMainPassword.valid) return isMainPassword;
-
-
-        if (mainPassword.nextElementSibling.textContent.toLowerCase().includes('contraseñas no coinciden') && mainPassword.dataset.touched === 'true') {
-
-            // basically updates the UI of the other password input
-            mainPassword.classList.remove('touched');
-            mainPassword.nextElementSibling.classList.add('hidden');
-            mainPassword.nextElementSibling.textContent = '';
-            mainPassword.dataset.valid = 'true';
-            return isRepeatedPassword;
-        }
-    }
     // user validation
     if (input.type === 'text') return validateUser(input.value);
+
+    const [mainPassword, repeatedPassword] = [...section.querySelectorAll('input[type="password"]')];
+    if (input.type === 'password') return handleValidationForPassword(input, {mainPassword, repeatedPassword});
 }
 
 

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./src/output.css">
+    <script src="./src/login.js" defer type="module"></script>
+</head>
+<body class="h-dvh bg-neutral-100">
+<div class="h-full flex justify-center items-center flex-col gap-5">
+    <div class="border bg-neutral-50 rounded flex flex-col gap-5 items-center px-5 py-5 max-w-[340px]">
+        <div class="flex flex-col gap-3 items-center">
+            <h1 class="font-bold text-4xl">Signup</h1>
+            <p class="text-neutral-300 text-center">
+                Aqui te puedes registrar y crear una cuenta
+            </p>
+        </div>
+        <form class="w-full flex flex-col gap-10 text-xl">
+            <div id="inputs-container" class="flex flex-col gap-5">
+                <div class="flex flex-col gap-3">
+                    <h3 class="text-xl font-bold text-red-400 underline">
+                        Datos Personales
+                    </h3>
+                    <div class="flex flex-col gap-2">
+                        <input type="text" class=" px-3 py-2 border bg-neutral-200 border-neutral-300 rounded"
+                               placeholder="Nombre">
+                        <span class="text-red-500 text-sm hidden"></span>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <input type="text" class=" px-3 py-2 border bg-neutral-200 border-neutral-300 rounded"
+                               placeholder="Apellidos">
+                        <span class="text-red-500 text-sm hidden"></span>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <input type="tel" class=" px-3 py-2 border bg-neutral-200 border-neutral-300 rounded"
+                               placeholder="Tel. 1234-5678">
+                        <span class="text-red-500 text-sm hidden"></span>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <h3 class="text-xl font-bold text-red-400 underline">
+                        Datos Inicio de Sesion
+                    </h3>
+                    <div class="flex flex-col gap-2">
+                        <input type="text" class=" px-3 py-2 border bg-neutral-200 border-neutral-300 rounded"
+                               placeholder="Usuario">
+                        <span class="text-red-500 text-sm hidden"></span>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <input type="Email" class=" px-3 py-2 border bg-neutral-200 border-neutral-300 rounded"
+                               placeholder="email">
+                        <span class="text-red-500 text-sm hidden"></span>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <input type="password" class=" px-3 py-2 border bg-neutral-200 border-neutral-300 rounded"
+                               placeholder="Contraseña">
+                        <span class="text-red-500 text-sm hidden"></span>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <input type="password" class=" px-3 py-2 border bg-neutral-200 border-neutral-300 rounded"
+                               placeholder="Confirmar Contraseña">
+                        <span class="text-red-500 text-sm hidden"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-5">
+                <button id="login-button" type="button" class="rounded px-3 py-2 bg-red-700 text-white">
+                    <span>Signup</span>
+                    <span class="hidden w-[30px] h-[30px] border-4 border-black rounded-full border-b-gray-100 spin"></span>
+                </button>
+                <a href="./" class="text-center text-sm text-red-700 hover:underline">Ya tienes una cuenta? Ingresa aqui</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

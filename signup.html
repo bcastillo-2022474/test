@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="./src/output.css">
-    <script src="./src/login.js" defer type="module"></script>
+    <script src="./src/sign-up.js" defer type="module"></script>
 </head>
 <body class="h-dvh bg-neutral-100">
 <div class="h-full flex justify-center items-center flex-col gap-5">
@@ -18,7 +18,8 @@
         </div>
         <form class="w-full flex flex-col gap-10 text-xl">
             <div id="inputs-container" class="flex flex-col gap-5">
-                <div class="flex flex-col gap-3">
+                <!--IMPORTANT, ID IS NECESSARY FOR THE JS-->
+                <section id="personal-info" class="flex flex-col gap-3">
                     <h3 class="text-xl font-bold text-red-400 underline">
                         Datos Personales
                     </h3>
@@ -37,8 +38,8 @@
                                placeholder="Tel. 1234-5678">
                         <span class="text-red-500 text-sm hidden"></span>
                     </div>
-                </div>
-                <div class="flex flex-col gap-3">
+                </section>
+                <section class="flex flex-col gap-3">
                     <h3 class="text-xl font-bold text-red-400 underline">
                         Datos Inicio de Sesion
                     </h3>
@@ -62,14 +63,15 @@
                                placeholder="Confirmar Contraseña">
                         <span class="text-red-500 text-sm hidden"></span>
                     </div>
-                </div>
+                </section>
             </div>
             <div class="flex flex-col gap-5">
                 <button id="login-button" type="button" class="rounded px-3 py-2 bg-red-700 text-white">
                     <span>Signup</span>
                     <span class="hidden w-[30px] h-[30px] border-4 border-black rounded-full border-b-gray-100 spin"></span>
                 </button>
-                <a href="./" class="text-center text-sm text-red-700 hover:underline">Ya tienes una cuenta? Ingresa aqui</a>
+                <a href="./" class="text-center text-sm text-red-700 hover:underline">Ya tienes una cuenta? Ingresa
+                    aqui</a>
             </div>
         </form>
     </div>

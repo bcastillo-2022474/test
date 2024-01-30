@@ -1,4 +1,4 @@
-import {validateEmail, validatePassword} from './validators.js';
+import {validateEmail, validateForm, validateMinLength, validatePassword} from './validators.js';
 
 const inputsContainer = document.getElementById('inputs-container');
 const loginButton = document.getElementById('login-button');
@@ -40,19 +40,8 @@ inputsContainer.addEventListener('input', (e) => {
 })
 
 function validateInput(input) {
-    console.log(validateEmail(input.value));
-    console.log(validateEmail(input.value));
     if (input.type === 'email') return validateEmail(input.value);
     if (input.type === 'password') return validatePassword(input.value);
-}
-
-function validateForm(inputs) {
-    const formIsValid = inputs.reduce((isValid, input) => {
-        if (input.dataset.valid === 'false' || !isValid) return false;
-        return true;
-    }, true);
-
-    return formIsValid;
 }
 
 loginButton.addEventListener('click', (e) => {

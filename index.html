@@ -5,23 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="./src/output.css">
+    <script src="./src/login.js" defer type="module"></script>
 </head>
 <body class="h-dvh bg-neutral-100">
-    <div class="h-full flex justify-center items-center flex-col gap-5">
-        <div class="border bg-neutral-50 rounded flex flex-col gap-24 items-center px-5 py-14">
+<div class="h-full flex justify-center items-center flex-col gap-5">
+    <div class="border bg-neutral-50 rounded flex flex-col gap-12 items-center px-5 py-14 max-w-[320px]">
+        <div class="flex flex-col gap-3 items-center">
             <h1 class="font-bold text-4xl">Login</h1>
-            <form class="p-5 flex flex-col gap-10 text-xl">
-                <div class="flex flex-col gap-5">
-                    <input type="text" class="px-3 py-2 border bg-neutral-200 border-neutral-300 rounded" placeholder="email">
-                    <input type="text" class="px-3 py-2 border bg-neutral-200 border-neutral-300 rounded" placeholder="Contraseña">
+            <p class="text-neutral-300 text-center">
+                Ingresa tus credenciales para acceder a tu cuenta
+            </p>
+        </div>
+        <form class="p-5 flex flex-col gap-10 text-xl">
+            <div id="inputs-container" class="flex flex-col gap-5">
+                <div class="flex flex-col gap-2">
+                    <input type="email" class="px-3 py-2 border bg-neutral-200 border-neutral-300 rounded"
+                           placeholder="email">
+                    <span class="text-red-500 text-sm hidden"></span>
                 </div>
-                <button type="button" class="px-3 py-2 bg-red-700 text-white">
+
+                <div class="flex flex-col gap-2">
+                    <input type="password" class="px-3 py-2 border bg-neutral-200 border-neutral-300 rounded"
+                           placeholder="Contraseña">
+                    <span class="text-red-500 text-sm hidden"></span>
+                </div>
+            </div>
+            <div class="flex flex-col gap-5">
+                <button id="login-button" type="button" class="px-3 py-2 bg-red-700 text-white">
                     <span>Login</span>
                     <span class="hidden w-[30px] h-[30px] border-4 border-black rounded-full border-b-gray-100 spin"></span>
                 </button>
-                <button class="px-3 py-2 bg-red-700 text-white">Signup</button>
-            </form>
-        </div>
+                <a href="./signup.html" class="text-center px-3 py-2 bg-red-700 text-white">Signup</a>
+            </div>
+        </form>
     </div>
+</div>
 </body>
 </html>

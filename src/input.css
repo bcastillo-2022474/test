@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.touched {
+    @apply border-red-500 bg-red-100;
+}

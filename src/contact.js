@@ -1,267 +1,213 @@
+const searchInput = document.getElementById('search-input');
+const buttonNext = document.getElementById('button-next');
+const buttonPrevious = document.getElementById('button-previous');
+let MAX_PAGINATION = 5;
+const hiddenFields = [];
+const sorting = {
+    order: 'asc',
+    field: 'name',
+    type: 'string'
+}
+// const data = [
+//     {
+//         name: 'Jhon Doe',
+//         email: 'jhondoe@example.com',
+//         phoneNumber: '12345678',
+//         address: '1234 Main St'
+//     },
+//     {
+//         name: 'Jane Doe',
+//         email: 'janedoe@example.com',
+//         phoneNumber: '12345678',
+//         address: '1234 Main St'
+//     },
+//     {
+//         name: 'John Smith',
+//         email: 'jhonsmith@example.com',
+//         phoneNumber: '12345678',
+//         address: '1234 Main St'
+//     }
+// ]
+const data = [];
+
+for (let i = 1; i <= 20; i++) {
+    data.push({
+        name: `User ${i}`,
+        email: `user${i}@example.com`,
+        phoneNumber: '12345678',
+        address: '1234 Main St'
+    });
+}
+
 const state = {
-  currentPagination: 1,
-  rowsNeeededToHide: []
-};
-const searchInput = document.getElementById("search-input");
-const table = document.getElementById("table");
-const tbody = table.querySelector("tbody");
-const buttonsPaginationContainer = document.getElementById(
-  "container-buttons-pagination"
-);
-const MAX_TUPLES = 5;
+    currentPagination: 1,
+    maxPagination: data.length / MAX_PAGINATION
+}
 
-const columnMap = {};
-const isColumnNumberOnly = (thPosition, rows) => {
-  if (columnMap[thPosition]) return columnMap[thPosition];
-  const columns = rows.map(
-    (row) => [...row.querySelectorAll("td")][thPosition]
-  );
-  columnMap[thPosition] = columns.every(
-    (col) => !isNaN(Number(col.textContent.trim()))
-  );
-  return columnMap[thPosition];
-};
+function renderHiddenFields(hiddenFields) {
+    const buttons = hiddenFields.map(field => {
+        return `<button class="filter-button">
+            <span>${field}</span>
+            <i class="fas fa-times"></i>
+        </button>`
+    });
+    console.log({buttons})
 
-const createPaginationButtons = () => {
-  const arr = [...tbody.querySelectorAll("tr:not(#spinner)")];
-  const buttonsQuantity = Math.ceil(arr.length / MAX_TUPLES);
-  for (let i = 1; i <= buttonsQuantity; i++) {
-    buttonsPaginationContainer.insertAdjacentHTML(
-      "beforeend",
-      `<button class="rounded-sm w-[40px] h-[40px] text-sm">${i}</button>`
-    );
-    console.log(buttonsPaginationContainer);
-  }
-};
+    const hiddenFieldsContainer = document.getElementById('hidden-fields');
+    hiddenFieldsContainer.classList.remove('hidden');
+    hiddenFieldsContainer.innerHTML = '';
+    hiddenFieldsContainer.insertAdjacentHTML('beforeend', buttons.join(''));
+}
 
-createPaginationButtons();
+function getSpannedText(text, input) {
+    const regex = new RegExp(input, 'gi');
+    return text.replace(regex, (match) => `<span class="highlited-text">${match}</span>`);
+}
 
-const getHTMLHighlighted = (element, searchValue) => {
-  console.log({ element });
-  const unnecessaryDivs = new Set();
-  element.querySelectorAll("span[data-highlighted=true]").forEach((span) => {
-    unnecessaryDivs.add(span.parentNode);
-    span.parentNode.replaceChild(
-      document.createTextNode(span.textContent),
-      span
-    );
-  });
-  unnecessaryDivs.forEach((div) => {
-    if (!div.textContent.trim()) {
-      div.parentNode.removeChild(div);
-      return;
-    }
-    div.parentNode.replaceChild(document.createTextNode(div.textContent), div);
-  });
-  console.log({ element }, "SEARCH = ''");
+function getHighlightedRows(filteredData) {
 
-  if (searchValue === "") return true;
+    const name = getSpannedText(filteredData.name, searchInput.value);
+    const email = getSpannedText(filteredData.email, searchInput.value);
+    const phoneNumber = getSpannedText(filteredData.phoneNumber, searchInput.value);
+    const address = getSpannedText(filteredData.address, searchInput.value);
 
-  const regex = new RegExp(searchValue, "gi");
+    const isNameHidden = hiddenFields.includes('Name');
+    const isEmailHidden = hiddenFields.includes('Email');
+    const isPhoneNumberHidden = hiddenFields.includes('phoneNumber');
+    const isAddressHidden = hiddenFields.includes('Address');
 
-  const walk = (node) => {
-    if (node.nodeType !== Node.TEXT_NODE && node.nodeType !== node.ELEMENT_NODE)
-      return false;
-    if (node.nodeType === Node.ELEMENT_NODE) {
-      return [...node.childNodes].some(walk);
-    }
+    return `
+        <tr>
+            <td${isNameHidden ? ' class="hidden"' : ' '}>${name}</td>
+            <td${isEmailHidden ? ' class="hidden"' : ' '}>${email}</td>
+            <td${isPhoneNumberHidden ? ' class="hidden"' : ' '}>${phoneNumber}</td>
+            <td${isAddressHidden ? ' class="hidden"' : ' '}>${address}</td>
+            <td>
+                <button class="text-neutral-400 w-full rounded">...</button>
+            </td>
+        </tr>
+    `
+}
 
-    const originalText = node.textContent;
-    const doesMatch = originalText.match(regex);
-    if (!doesMatch) return false;
-    const [match] = doesMatch;
-    const html = originalText.replace(
-      regex,
-      `<span data-highlighted="true" class="bg-indigo-600">${match}</span>`
-    );
-    console.log({ html, regex });
+const onInput = (e) => {
+    const input = e.target.value;
+    const {currentPagination} = state;
 
-    // Create a new temporary element to hold the replacement HTML
-    const container = document.createElement("div");
-    container.innerHTML = html;
+    const filteredData = data.filter((contact, i) => {
+        if (i + 1 <= ((currentPagination * MAX_PAGINATION) - MAX_PAGINATION) || i + 1 > ((currentPagination * MAX_PAGINATION))) return false;
 
-    // Get the first child of the temporary element (the <span> element)
-    node.parentNode.replaceChild(container, node);
-    return true;
-  };
+        return Object.keys(contact).reduce((isMatch, key) => {
+            const value = contact[key];
+            if (!isMatch) return value.toLowerCase().includes(input.toLowerCase().trim()) || false;
+            return isMatch;
+        }, false);
+    }).toSorted((a, b) => {
+        if (sorting.type === 'string') {
+            if (sorting.order === 'asc') return a[sorting.field].localeCompare(b[sorting.field]);
+            return b[sorting.field].localeCompare(a[sorting.field]);
+        }
+        // we assume that the type is number
+        if (sorting.order === 'asc') return a[sorting.field] - b[sorting.field];
+        return b[sorting.field] - a[sorting.field];
+    })
 
-  return [...element.childNodes].some(walk);
-};
+    const thSorted = document.querySelector(`th[data-field="${sorting.field}"]`);
+    const sortIconName = sorting.order === 'asc' ? 'down' : 'up';
+    theader.querySelectorAll('i').forEach(icon => icon.classList.add('!hidden'));
+    thSorted.querySelector(`i.fa-chevron-${sortIconName}`).classList.remove('!hidden');
 
-const getRowsThatDontMatchSearch = (rows, searchValue) =>
-  rows.filter((row) => {
-    const cells = [...row.children];
+    const rows = filteredData.map(contact => getHighlightedRows(contact));
 
-    // TO AVOID ACTIONS MATCHING THE SEARCH VALUE
-    cells.pop();
+    const tableBody = document.getElementById('contacts-table');
+    tableBody.innerHTML = '';
+    tableBody.insertAdjacentHTML('beforeend', rows.join(''));
 
-    console.log(cells.length);
+    const paginationText = document.getElementById('pagination-text');
+    const html = `
+        <span>Mostrando ${currentPagination * MAX_PAGINATION - MAX_PAGINATION + 1} a ${currentPagination * MAX_PAGINATION} de ${data.length} resultados</span>
+    `
+    paginationText.innerHTML = html;
 
-    const someMatch = cells.reduce((someMatch, cell) => {
-      const match = getHTMLHighlighted(cell, searchValue);
-      console.log(match);
-      if (match) return match;
-      return someMatch;
-      // return textValue !== cell.innerHTML || textValue !== "";
-    }, false);
 
-    return !someMatch;
-  });
+}
 
-const hideTuples = (tuples, MAX_TUPLES, pagination = 1, set = new Set()) => {
-  if (tuples.length < MAX_TUPLES) return;
+searchInput.addEventListener('input', onInput);
 
-  const filteredTuples = tuples.filter((element) => {
-    if (set.has(element)) element.classList.add("hidden");
-    return !set.has(element);
-  });
-  filteredTuples.forEach((element, i) => {
-    element.classList.remove("hidden");
-    if (i >= MAX_TUPLES * pagination - 5 && i < MAX_TUPLES * pagination) return;
-
-    element.classList.add("hidden");
-  });
-  document.getElementById("showing-message").textContent = `Showing ${
-    MAX_TUPLES * (pagination - 1) + 1
-  } to ${Math.min(MAX_TUPLES * pagination, tuples.length)} out of ${
-    tuples.length
-  } results`;
-};
-
-const makeOddRowsDistinguishable = () => {
-  [...tbody.querySelectorAll("tr:not(.hidden):not(#spinner)")].forEach(
-    (row, i) => {
-      row.classList.remove("bg-gray-100");
-      if (i % 2 === 1) row.classList.add("bg-gray-100");
-    }
-  );
-};
-
-document.addEventListener("click", (e) => {
-  const table = document.getElementById("table");
-  const th = e.target.closest("th");
-
-  if (!th) return;
-
-  const thPosition = [...table.querySelectorAll("th")].findIndex(
-    (thElement) => thElement === th
-  );
-  const arrowUp = th.querySelector("i.fa-chevron-up");
-  const arrowDown = th.querySelector("i.fa-chevron-down");
-
-  const tbody = table.querySelector("tbody");
-  const rows = [...tbody.querySelectorAll("tr:not(#spinner)")];
-
-  const getDirection = (arrowUp, arrowDown) => {
-    if (
-      arrowUp.classList.contains("hidden") &&
-      arrowDown.classList.contains("hidden")
-    ) {
-      return "up";
-    }
-
-    if (arrowUp.classList.contains("hidden")) return "up";
-    return "down";
-  };
-
-  const direction = getDirection(arrowUp, arrowDown); // up | down
-  const columnsAreNumbers = isColumnNumberOnly(thPosition, rows);
-
-  rows.sort((a, b) => {
-    const textA = [...a.querySelectorAll("td")][thPosition].textContent;
-    const textB = [...b.querySelectorAll("td")][thPosition].textContent;
-    if (columnsAreNumbers) {
-      if (direction === "up") return Number(textA) - Number(textB);
-      return Number(textB) - Number(textA);
-    }
-
-    if (direction === "up") return textA.localeCompare(textB);
-    return textB.localeCompare(textA);
-  });
-
-  state.rowsNeeededToHide = getRowsThatDontMatchSearch(rows, searchInput.value);
-
-  // tbody.innerHTML = "";
-  rows.forEach((row) => {
-    tbody.appendChild(row); // Reorder the rows in the DOM
-  });
-
-  table.querySelector("i.fa-solid:not(.hidden)")?.classList?.add?.("hidden");
-
-  if (direction === "up") {
-    arrowUp.classList.remove("hidden");
-    arrowDown.classList.add("hidden");
-  }
-
-  if (direction === "down") {
-    arrowUp.classList.add("hidden");
-    arrowDown.classList.remove("hidden");
-  }
-
-  const buttonPagination = [...buttonsPaginationContainer.children].find(
-    (btn) => Number(btn.textContent.trim()) === state.currentPagination
-  );
-  buttonPagination.dispatchEvent(new Event("click", { bubbles: true }));
+buttonNext.addEventListener('click', () => {
+    // render next page
+    if (state.maxPagination === state.currentPagination) return;
+    state.currentPagination += 1;
+    onInput({target: {value: searchInput.value}});
 });
 
-// PAGINATION
-buttonsPaginationContainer.addEventListener("click", (e) => {
-  const button = e.target.closest(".text-sm");
-  if (!button) return;
-
-  [...buttonsPaginationContainer.children].forEach((btn) =>
-    btn.classList.remove("bg-indigo-600")
-  );
-
-  hideTuples(
-    [...tbody.querySelectorAll("tr:not(#spinner)")],
-    MAX_TUPLES,
-    Number(button.textContent.trim()),
-    new Set(state.rowsNeeededToHide)
-  );
-
-  state.currentPagination = Number(button.textContent.trim());
-
-  makeOddRowsDistinguishable();
-  button.classList.add("bg-indigo-600");
-  tbody.classList.remove("first:[&_tr]:table-row");
-  tbody.classList.remove("[&_tr]:hidden");
-  tbody.classList.add("first:[&_tr]:hidden");
+buttonPrevious.addEventListener('click', () => {
+    // render previous page
+    if (state.currentPagination === 1) return;
+    state.currentPagination -= 1;
+    onInput({target: {value: searchInput.value}});
 });
 
-[...tbody.querySelectorAll("tr:not(#spinner)")].forEach(
-  (child, i) => i % 2 === 1 && child.classList.add("bg-gray-100")
-);
+const theader = document.getElementById('contacts-table-header');
 
-const firstColumn = table.querySelector("th");
-firstColumn.dispatchEvent(new Event("click", { bubbles: true }));
-
-const nextButton = document.getElementById("next-button");
-
-nextButton.addEventListener("click", () => {
-  const btn = [...buttonsPaginationContainer.children].find(
-    (el) => Number(el.textContent.trim()) === state.currentPagination + 1
-  );
-
-  if (!btn) return;
-  btn.dispatchEvent(new Event("click", { bubbles: true }));
+theader.addEventListener('contextmenu', (e) => {
+    if (e.target.closest('th')) e.preventDefault();
 });
+theader.addEventListener('auxclick', (e) => {
+    console.log('when clicked auxclick')
+    const th = e.target.closest('th');
+    if (!th) return;
 
-const previousButton = document.getElementById("previous-button");
-
-previousButton.addEventListener("click", () => {
-  const btn = [...buttonsPaginationContainer.children].find(
-    (el) => Number(el.textContent.trim()) === state.currentPagination - 1
-  );
-
-  if (!btn) return;
-  btn.dispatchEvent(new Event("click", { bubbles: true }));
+    // hide column
+    th.querySelector('.tooltip').classList.remove('hidden');
+    const onClick = (e) => {
+        if (e.target.closest('.tooltip')) return;
+        th.querySelector('.tooltip').classList.add('hidden');
+        window.removeEventListener('click', onClick);
+    }
+    window.addEventListener('click', onClick)
 });
+theader.addEventListener('click', (e) => {
+    console.log('when clicked sort column')
+    const th = e.target.closest('th');
+    if (th.dataset.sortable === 'false') return;
+    if (!th) return;
 
-searchInput.addEventListener("input", (e) => {
-  const rows = [...tbody.querySelectorAll("tr:not(#spinner)")];
+    const field = th.dataset.field;
+    const type = th.dataset.type;
+    const order = sorting.field !== field ? 'asc'
+        : sorting.order === 'asc' ? 'desc' : 'asc';
 
-  const thSorted = table.querySelector("i.fa-solid:not(.hiden)").closest("th");
-  thSorted.dispatchEvent(new Event("click", { bubbles: true }));
-  thSorted.dispatchEvent(new Event("click", { bubbles: true }));
-});
+    sorting.field = field;
+    sorting.type = type;
+    sorting.order = order;
+
+    onInput({target: {value: searchInput.value}});
+})
+
+theader.addEventListener('click', (e) => {
+    console.log('when clicked hide column')
+    const tooltip = e.target.closest('.tooltip');
+    if (!tooltip) return;
+
+    const th = e.target.closest('th');
+    const field = th.dataset.field;
+    const position = Array.from(th.parentElement.children).indexOf(th);
+    const tbody = document.getElementById('contacts-table');
+    const rows = [...tbody.querySelectorAll('tr')];
+    console.log({length: rows.length})
+    rows.forEach(tr => {
+        console.log(tr.children[position])
+        tr.children[position].classList.add('hidden');
+    });
+    console.log(th)
+    th.classList.add('hidden');
+
+    // add the field to the hidden fields
+    hiddenFields.push([...th.querySelectorAll('span')].at(-1).textContent);
+    console.log({text: th.dataset.field, hiddenFields})
+    renderHiddenFields(hiddenFields);
+})
+
+
+onInput({target: {value: ''}});
+

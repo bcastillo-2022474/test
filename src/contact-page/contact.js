@@ -1,12 +1,14 @@
 import {getHighlightedRows} from "./highlighted-text.js";
 import {getMatchingRows} from "./matching-rows.js";
+import {EDITED_CONTACT, FORM_MODE} from "../local-storage-constants.js";
+
 import {
     hiddenFields,
     MAX_ROWS_SHOWED_PER_PAGE,
     searchInput,
     sorting,
     state,
-    tableHeader
+    tableHeader, tbody
 } from "./constants.js";
 
 for (let i = 1; i <= 20; i++) {
@@ -44,7 +46,7 @@ export const onInput = (e, isInputEvent = true) => {
     tableHeader.querySelectorAll('i').forEach(icon => icon.classList.add('!hidden'));
     thSorted.querySelector(`i.fa-chevron-${sortIconName}`).classList.remove('!hidden');
 
-    const rows = filteredData.map(contact => getHighlightedRows(contact, hiddenFields, searchInput.value));
+    const rows = filteredData.map((contact, i) => getHighlightedRows(contact, i, hiddenFields, searchInput.value));
 
     const tableBody = document.getElementById('contacts-table');
     tableBody.innerHTML = '';
@@ -60,6 +62,49 @@ onInput({target: {value: state.searchValue}}, false);
 
 
 searchInput.addEventListener('input', onInput);
+
+tbody.addEventListener('click', (e) => {
+    e.stopPropagation()
+    const action = e.target.closest('button[data-action]');
+    console.log({action})
+    if (!action) return;
+
+    // show tooltip
+    const tooltip = action.parentElement.querySelector('.tooltip');
+    tooltip.classList.toggle('hidden');
+    console.log({tooltip})
+    const onClick = (e) => {
+        if (e.target.closest('.tooltip') === tooltip) return;
+        console.log('clicked outside actions tooltip')
+        tooltip.classList.add('hidden');
+        window.removeEventListener('click', onClick);
+    }
+    window.addEventListener('click', onClick)
+
+    // handle action
+    tooltip.addEventListener('click', (e) => {
+        const button = e.target.closest('button');
+        if (!button) return;
+
+        if (button.textContent === 'Eliminar') {
+            const tr = action.closest('tr');
+            const objectDeleted = state.dataWithSpecialFilters.splice(+tr.dataset.position, 1);
+            state.baseData.splice(state.baseData.indexOf(objectDeleted), 1);
+            tr.remove();
+        }
+        if (button.textContent === 'Editar') {
+            const tr = action.closest('tr');
+            const index = tr.dataset.position;
+            const contactInfo = {data: state.dataWithSpecialFilters[index], index}
+            localStorage.setItem(EDITED_CONTACT, JSON.stringify(contactInfo));
+            localStorage.setItem(FORM_MODE, JSON.stringify({mode: 'edit'}));
+            location.href = './contact-edit.html';
+        }
+        if (button.textContent === 'Ver') {
+            // redirect to contact page
+        }
+    });
+});
 
 import './buttons-logic.js';
 

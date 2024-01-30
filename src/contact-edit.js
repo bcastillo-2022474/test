@@ -5,6 +5,7 @@ import {CONTACTOS, EDITED_CONTACT, FORM_MODE} from "./local-storage-constants.js
 
 // check local storage
 const {mode} = JSON.parse(localStorage.getItem(FORM_MODE)) || {};
+console.log({mode})
 const submitButton = document.getElementById('submit-button');
 const titleForm = document.getElementById('title-form');
 const inputsContainer = submitButton.closest('#inputs-container');
@@ -92,6 +93,7 @@ if (mode === 'edit') {
     // change button text
     submitButton.textContent = 'Actualizar';
     const contact = JSON.parse(localStorage.getItem(EDITED_CONTACT)).data;
+    console.log({contact})
     // fill the form with the data
     const form = submitButton.closest('form');
     form.querySelector('input[name="name"]').value = contact.name;

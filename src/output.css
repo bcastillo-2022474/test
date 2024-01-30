@@ -1108,6 +1108,12 @@ input:checked ~ .dot {
   background-color: #bb4863;
 }
 
+.tooltip-actions {
+  right: 0px;
+  margin-right: 0.25rem;
+  gap: 0.25rem;
+}
+
 .hover\:bg-gray-100:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));

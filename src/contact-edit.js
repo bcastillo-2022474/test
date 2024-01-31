@@ -93,7 +93,6 @@ if (mode === 'edit') {
     // change button text
     submitButton.textContent = 'Actualizar';
     const contact = JSON.parse(localStorage.getItem(EDITED_CONTACT)).data;
-    console.log({contact})
     // fill the form with the data
     const form = submitButton.closest('form');
     form.querySelector('input[name="name"]').value = contact.name;

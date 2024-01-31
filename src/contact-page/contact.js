@@ -1,6 +1,6 @@
 import {getHighlightedRows} from "./highlighted-text.js";
 import {getMatchingRows} from "./matching-rows.js";
-import {EDITED_CONTACT, FORM_MODE} from "../local-storage-constants.js";
+import {CONTACTOS, EDITED_CONTACT, FORM_MODE} from "../local-storage-constants.js";
 
 import {
     hiddenFields,
@@ -11,16 +11,22 @@ import {
     tableHeader, tbody
 } from "./constants.js";
 
-for (let i = 1; i <= 20; i++) {
-    const contact = {
-        name: `User ${i}`,
-        email: `user${i}@example.com`,
-        phoneNumber: `${Math.round(Math.random() * 100000000)}`.padEnd(8, '0'),
-        address: '1234 Main St',
-        favorite: Math.random() > 0.5
+if (localStorage.getItem(CONTACTOS) === null) {
+    for (let i = 1; i <= 20; i++) {
+        const contact = {
+            name: `User ${i}`,
+            email: `user${i}@example.com`,
+            phoneNumber: `${Math.round(Math.random() * 100000000)}`.padEnd(8, '0'),
+            address: '1234 Main St',
+            favorite: Math.random() > 0.5
+        }
+        state.dataWithSpecialFilters.push(contact);
+        state.baseData.push(contact);
     }
-    state.dataWithSpecialFilters.push(contact);
-    state.baseData.push(contact);
+    localStorage.setItem(CONTACTOS, JSON.stringify(state.baseData));
+} else {
+    state.baseData = JSON.parse(localStorage.getItem(CONTACTOS));
+    state.dataWithSpecialFilters = state.baseData;
 }
 
 export const onInput = (e, isInputEvent = true) => {
@@ -30,7 +36,6 @@ export const onInput = (e, isInputEvent = true) => {
     const {currentPagination} = state;
 
     state.matchingRows = getMatchingRows(state.dataWithSpecialFilters, sorting, input);
-    ;
     const {matchingRows} = state;
 
     const start = (currentPagination - 1) * MAX_ROWS_SHOWED_PER_PAGE;
@@ -90,6 +95,7 @@ tbody.addEventListener('click', (e) => {
             const tr = action.closest('tr');
             const objectDeleted = state.dataWithSpecialFilters.splice(+tr.dataset.position, 1);
             state.baseData.splice(state.baseData.indexOf(objectDeleted), 1);
+            localStorage.setItem(CONTACTOS, JSON.stringify(state.baseData));
             tr.remove();
         }
         if (button.textContent === 'Editar') {

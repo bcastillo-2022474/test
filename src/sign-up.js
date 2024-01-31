@@ -1,5 +1,5 @@
 import {validateEmail, validatePassword, validateMinLength, validateTel, validateUser} from './validators.js';
-import {resetUIOnSuccess, updateUIOnError, updateUiOnSuccess} from "./ui-states";
+import {resetUIOnSuccess, updateUIOnError, updateUiOnSuccess} from "./ui-states.js";
 
 const inputsContainer = document.getElementById('inputs-container');
 const loginButton = document.getElementById('login-button');

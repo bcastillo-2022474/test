@@ -1,27 +1,10 @@
 import {validateEmail, validatePassword, validateMinLength, validateTel, validateUser} from './validators.js';
+import {resetUIOnSuccess, updateUIOnError, updateUiOnSuccess} from "./ui-states.js";
 
 const inputsContainer = document.getElementById('inputs-container');
 const loginButton = document.getElementById('login-button');
 
-function updateUIOnError(input, message) {
-    input.classList.add('touched');
-    input.nextElementSibling.textContent = message;
-    input.nextElementSibling.classList.remove('hidden');
-    input.dataset.valid = 'false';
-}
 
-function updateUiOnSuccess(input) {
-    input.classList.remove('touched');
-    input.nextElementSibling.classList.add('hidden');
-    input.dataset.valid = 'true'
-}
-
-function resetUIOnSuccess(input) {
-    input.classList.remove('touched');
-    input.nextElementSibling.classList.add('hidden');
-    input.nextElementSibling.textContent = '';
-    input.dataset.valid = 'true';
-}
 
 
 inputsContainer.addEventListener('blur', (e) => {

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Información de contacto</title>
+    <script src="./src/view-contact.js" defer type="module"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-200 flex items-center justify-center h-screen">
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
+        <div class="mb-4">
+            <h2 class="text-2xl font-bold mb-2">Información de contacto</h2>
+            <hr>
+        </div>
+        <div id="contact-info" class="mb-6">
+            <div class="flex items-center mb-4 justify-between gap-5">
+                <p class="font-bold">Nombre:</p>
+                <p id="contact-name"></p>
+            </div>
+            <div class="flex items-center mb-4 justify-between gap-5">
+                <p class="font-bold">Correo electrónico:</p>
+                <p id="contact-email"></p>
+            </div>
+            <div class="flex items-center mb-4 justify-between gap-5">
+                <p class="font-bold">Teléfono:</p>
+                <p id="contact-phone"></p>
+            </div>
+            <!-- Address -->
+            <div class="flex items-center mb-4 justify-between gap-5">
+                <p class="font-bold">Dirección:</p>
+                <p id="contact-address"></p>
+            </div>
+        </div>
+        <div class="flex items-center justify-between gap-5">
+            <a href="./contacts.html" id="back-button" class="w-full text-center bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Volver
+            </a>
+        </div>
+    </div>
+</body>
+</html>

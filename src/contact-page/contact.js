@@ -107,7 +107,14 @@ tbody.addEventListener('click', (e) => {
             location.href = './contact-edit.html';
         }
         if (button.textContent === 'Ver') {
+            const tr = action.closest('tr');
+            const index = tr.dataset.position;
+            const contactInfo = {data: state.dataWithSpecialFilters[index], index}
+            localStorage.setItem(EDITED_CONTACT, JSON.stringify(contactInfo));
+            localStorage.setItem(FORM_MODE, JSON.stringify({mode: 'view'}));
+
             // redirect to contact page
+            location.href = './view-contact.html';
         }
     });
 });

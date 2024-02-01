@@ -1,8 +1,16 @@
-import {validateEmail, validatePassword, validateMinLength, validateTel, validateUser} from './validators.js';
+import {
+    validateEmail,
+    validatePassword,
+    validateMinLength,
+    validateTel,
+    validateUser,
+    validateForm
+} from './validators.js';
 import {resetUIOnSuccess, updateUIOnError, updateUiOnSuccess} from "./ui-states.js";
+import {ALL_USERS} from "./local-storage-constants.js";
 
 const inputsContainer = document.getElementById('inputs-container');
-const loginButton = document.getElementById('login-button');
+const registerButton = document.getElementById('register-button');
 
 
 
@@ -103,5 +111,27 @@ function validateInput(input) {
     const [mainPassword, repeatedPassword] = [...section.querySelectorAll('input[type="password"]')];
     if (input.type === 'password') return handleValidationForPassword(input, {mainPassword, repeatedPassword});
 }
+
+registerButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    const formIsValid = validateForm([...inputsContainer.querySelectorAll('input')]);
+    if (!formIsValid) return;
+
+    const users = JSON.parse(localStorage.getItem(ALL_USERS)) || [];
+    const userForm = {
+        email: inputsContainer.querySelector('input[type="text"]').value,
+        password: inputsContainer.querySelector('input[type="password"]').value
+    }
+
+    const user = users.find(user => user.email === userForm.email);
+    if (user) {
+        // update UI
+        return;
+    }
+
+    users.push(userForm);
+    localStorage.setItem(ALL_USERS, JSON.stringify(users));
+    window.location.href = '/login.html';
+});
 
 

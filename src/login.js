@@ -1,4 +1,5 @@
-import {validateEmail, validateForm, validateMinLength, validatePassword} from './validators.js';
+import {validateEmail, validateForm, validatePassword} from './validators.js';
+import {ALL_USERS, LOGGED_USER} from "./local-storage-constants.js";
 
 const inputsContainer = document.getElementById('inputs-container');
 const loginButton = document.getElementById('login-button');
@@ -48,4 +49,22 @@ loginButton.addEventListener('click', (e) => {
     e.preventDefault();
     const formIsValid = validateForm([...inputsContainer.querySelectorAll('input')]);
     if (!formIsValid) return;
+
+const users = JSON.parse(localStorage.getItem(ALL_USERS)) || [];
+    const userForm = {
+        email: inputsContainer.querySelector('input[type="text"]').value,
+        password: inputsContainer.querySelector('input[type="password"]').value
+    }
+
+    const user = users.find(user => user.email === userForm.email && user.password === userForm.password);
+    if (!user) {
+        // update UI
+        return;
+    }
+
+    localStorage.setItem(LOGGED_USER, JSON.stringify({
+        email: inputsContainer.querySelector('input[type="text"]').value,
+        password: inputsContainer.querySelector('input[email="password"]').value
+    }));
+    location.href = './contact-page.html';
 })

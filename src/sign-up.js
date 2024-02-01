@@ -119,7 +119,7 @@ registerButton.addEventListener('click', (e) => {
 
     const users = JSON.parse(localStorage.getItem(ALL_USERS)) || [];
     const userForm = {
-        email: inputsContainer.querySelector('input[type="text"]').value,
+        email: inputsContainer.querySelector('input[type="email"]').value,
         password: inputsContainer.querySelector('input[type="password"]').value
     }
 
@@ -131,7 +131,7 @@ registerButton.addEventListener('click', (e) => {
 
     users.push(userForm);
     localStorage.setItem(ALL_USERS, JSON.stringify(users));
-    window.location.href = '/login.html';
+    window.location.href = '/';
 });
 
 

@@ -16,7 +16,7 @@ export function getHighlightedRows(filteredData, index, hiddenFields, searchValu
     const isAddressHidden = hiddenFields.includes('address');
 
     return `
-        <tr class="relative" data-position="${index}">
+        <tr class="" data-position="${index}">
             <td><span class="flex justify-center star"><i class="cursor-pointer fa-${filteredData.favorite ? 'solid' : 'regular'} fa-star"></i></span></td>
             <td${isNameHidden ? ' class="hidden"' : ' '}>${name}</td>
             <td${isEmailHidden ? ' class="hidden"' : ' '}>${email}</td>

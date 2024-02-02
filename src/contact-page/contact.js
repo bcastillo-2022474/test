@@ -132,7 +132,7 @@ tbody.addEventListener('click', (e) => {
 
         if (button.textContent === 'Eliminar') {
             const tr = action.closest('tr');
-            const objectDeleted = state.dataWithSpecialFilters.splice(+tr.dataset.position, 1);
+            const objectDeleted = state.dataWithSpecialFilters.splice(findContactIndex(tr), 1);
             state.baseData.splice(state.baseData.indexOf(objectDeleted), 1);
             localStorage.setItem(CONTACTOS, JSON.stringify(state.baseData));
             tr.remove();

@@ -16,8 +16,14 @@
         <div class="flex justify-between items-center">
             <div class="w-[50px] h-[50px] bg-neutral-700"></div>
             <div class="flex flex-col gap-1">
-                <div class="w-[40px] h-[40px] rounded-full bg-red-300">
-                </div>
+                <button id="user-btn"
+                        class="w-[40px] h-[40px] rounded-full bg-red-300 relative flex justify-center items-center">
+                    <span id="email-initials">JC</span>
+                    <span class="tooltip right-0 !mr-0 mt-0.5 hidden flex flex-col gap-2">
+                        <span id="logout" class="border px-2 py-1 rounded border-black">Logout</span>
+                        <span id="check-perfil" class="border px-2 py-1 rounded border-black">Ver Perfil</span>
+                    </span>
+                </button>
             </div>
         </div>
     </nav>
@@ -47,70 +53,74 @@
         <div id="hidden-fields" class="hidden flex gap-3">
         </div>
         <!--<p>Ordernado por X con columna [Y, Z] escondidas, filtrado por Favoritos y busqueda 'M'</p>-->
-        <div class="overflow-x-scroll">
-            <div class="rounded-2xl border min-w-fit overflow-hidden">
-                <table class="w-full">
-                    <thead id="contacts-table-header" class="w-full">
-                    <tr class="bg-gray-100 [&_>_th:last-child]:cursor-default [&_>_th:first-child]:cursor-default [&_>th]:cursor-pointer">
-                        <th data-type="boolean" data-sortable="false" data-field="favorite"
-                            class="p-2 border border-t-0 border-l-0 w-[40px]">
-                            <div class="flex items-center gap-3 relative">
-                                <button class="tooltip hidden">
-                                    <span>Esconder columna</span>
-                                </button>
-                                <span>Favorito</span>
-                            </div>
-                        </th>
-                        <th data-type="string" data-sortable="true" data-field="name"
-                            class="p-2 border border-t-0 border-l-0">
-                            <div class="flex items-center gap-3 relative">
-                                <button class="tooltip hidden">
-                                    <span>Esconder columna</span>
-                                </button>
-                                <span>Name</span>
-                                <i class="fa-solid p-1 fa-chevron-up !hidden"></i>
-                                <i class="fa-solid p-1 fa-chevron-down !hidden"></i>
-                            </div>
-                        </th>
-                        <th data-type="string" data-sortable="true" data-field="email" class="p-2 border border-t-0 ">
-                            <div class="flex items-center gap-3 relative">
-                                <button class="tooltip hidden">
-                                    <span>Esconder columna</span>
-                                </button>
-                                <span>Email</span>
-                                <i class="fa-solid p-1 fa-chevron-up !hidden"></i>
-                                <i class="fa-solid p-1 fa-chevron-down !hidden"></i>
-                            </div>
-                        </th>
-                        <th data-type="number" data-sortable="true" data-field="phoneNumber"
-                            class="p-2 border border-t-0 ">
-                            <div class="flex items-center gap-3 relative">
-                                <button class="tooltip hidden">
-                                    <span>Esconder columna</span>
-                                </button>
-                                <span>Phone</span>
-                                <i class="fa-solid p-1 fa-chevron-up !hidden"></i>
-                                <i class="fa-solid p-1 fa-chevron-down !hidden"></i>
-                            </div>
-                        </th>
-                        <th data-type="string" data-sortable="true" data-field="address" class="p-2 border border-t-0 ">
-                            <div class="flex items-center gap-3 relative">
-                                <button class="tooltip hidden">
-                                    <span>Esconder columna</span>
-                                </button>
-                                <span>Address</span>
-                                <i class="fa-solid p-1 fa-chevron-up !hidden"></i>
-                                <i class="fa-solid p-1 fa-chevron-down !hidden"></i>
-                            </div>
-                        </th>
-                        <th data-type="actions" data-sortable="false" data-field="actions"
-                            class="p-2 border border-t-0 border-r-0 w-[40px]">Actions
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody id="contacts-table"
-                           class="tbody-th">
-                </table>
+        <div class="relative">
+            <div class="overflow-x-scroll">
+                <div class="rounded-2xl border min-w-fit overflow-x-hidden">
+                    <table class="w-full">
+                        <thead id="contacts-table-header" class="w-full">
+                        <tr class="bg-gray-100 [&_>_th:last-child]:cursor-default [&_>_th:first-child]:cursor-default [&_>th]:cursor-pointer">
+                            <th data-type="boolean" data-sortable="false" data-field="favorite"
+                                class="p-2 border border-t-0 border-l-0 w-[40px]">
+                                <div class="flex items-center gap-3 relative">
+                                    <button class="tooltip hidden">
+                                        <span>Esconder columna</span>
+                                    </button>
+                                    <span>Favorito</span>
+                                </div>
+                            </th>
+                            <th data-type="string" data-sortable="true" data-field="name"
+                                class="p-2 border border-t-0 border-l-0">
+                                <div class="flex items-center gap-3 relative">
+                                    <button class="tooltip hidden">
+                                        <span>Esconder columna</span>
+                                    </button>
+                                    <span>Name</span>
+                                    <i class="fa-solid p-1 fa-chevron-up !hidden"></i>
+                                    <i class="fa-solid p-1 fa-chevron-down !hidden"></i>
+                                </div>
+                            </th>
+                            <th data-type="string" data-sortable="true" data-field="email"
+                                class="p-2 border border-t-0 ">
+                                <div class="flex items-center gap-3 relative">
+                                    <button class="tooltip hidden">
+                                        <span>Esconder columna</span>
+                                    </button>
+                                    <span>Email</span>
+                                    <i class="fa-solid p-1 fa-chevron-up !hidden"></i>
+                                    <i class="fa-solid p-1 fa-chevron-down !hidden"></i>
+                                </div>
+                            </th>
+                            <th data-type="number" data-sortable="true" data-field="phoneNumber"
+                                class="p-2 border border-t-0 ">
+                                <div class="flex items-center gap-3 relative">
+                                    <button class="tooltip hidden">
+                                        <span>Esconder columna</span>
+                                    </button>
+                                    <span>Phone</span>
+                                    <i class="fa-solid p-1 fa-chevron-up !hidden"></i>
+                                    <i class="fa-solid p-1 fa-chevron-down !hidden"></i>
+                                </div>
+                            </th>
+                            <th data-type="string" data-sortable="true" data-field="address"
+                                class="p-2 border border-t-0 ">
+                                <div class="flex items-center gap-3 relative">
+                                    <button class="tooltip hidden">
+                                        <span>Esconder columna</span>
+                                    </button>
+                                    <span>Address</span>
+                                    <i class="fa-solid p-1 fa-chevron-up !hidden"></i>
+                                    <i class="fa-solid p-1 fa-chevron-down !hidden"></i>
+                                </div>
+                            </th>
+                            <th data-type="actions" data-sortable="false" data-field="actions"
+                                class="p-2 border border-t-0 border-r-0 w-[40px]">Actions
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody id="contacts-table"
+                               class="tbody-th">
+                    </table>
+                </div>
             </div>
         </div>
         <div class="flex flex-col gap-3 sm:flex-row sm:justify-between w-full sm:items-center border p-2">

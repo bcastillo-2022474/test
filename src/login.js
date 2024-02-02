@@ -4,6 +4,13 @@ import {ALL_USERS, LOGGED_USER} from "./local-storage-constants.js";
 const inputsContainer = document.getElementById('inputs-container');
 const loginButton = document.getElementById('login-button');
 
+
+if (localStorage.getItem(ALL_USERS) === null) localStorage.setItem(ALL_USERS, JSON.stringify([]));
+
+if (localStorage.getItem(LOGGED_USER)) {
+    location.href = './contacts.html';
+}
+
 inputsContainer.addEventListener('blur', (e) => {
     const input = e.target.closest('input');
     if (!input) return;
@@ -50,21 +57,23 @@ loginButton.addEventListener('click', (e) => {
     const formIsValid = validateForm([...inputsContainer.querySelectorAll('input')]);
     if (!formIsValid) return;
 
-const users = JSON.parse(localStorage.getItem(ALL_USERS)) || [];
+    const users = JSON.parse(localStorage.getItem(ALL_USERS)) || [];
+    console.log(inputsContainer)
     const userForm = {
-        email: inputsContainer.querySelector('input[type="text"]').value,
+        email: inputsContainer.querySelector('input[type="email"]').value,
         password: inputsContainer.querySelector('input[type="password"]').value
     }
 
     const user = users.find(user => user.email === userForm.email && user.password === userForm.password);
     if (!user) {
         // update UI
+        alert('Usuario o contraseña incorrectos')
         return;
     }
 
     localStorage.setItem(LOGGED_USER, JSON.stringify({
-        email: inputsContainer.querySelector('input[type="text"]').value,
-        password: inputsContainer.querySelector('input[email="password"]').value
+        email: inputsContainer.querySelector('input[type="email"]').value,
+        password: inputsContainer.querySelector('input[type="password"]').value
     }));
-    location.href = './contact-page.html';
+    location.href = './contacts.html';
 })

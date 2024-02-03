@@ -5,20 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="./src/output.css">
+    <!-- IM GONNA USE THE SAME JS BECAUSE LAZy-->
     <script src="./src/sign-up.js" defer type="module"></script>
+    <script src="./src/view-contact.js" defer type="module"></script>
 </head>
 <body class="h-dvh bg-neutral-100 p-5">
 <div class="h-full flex justify-center items-center flex-col gap-5">
     <div class="border bg-neutral-50 rounded flex flex-col gap-5 items-center px-5 py-5 max-w-[340px]">
         <div class="flex flex-col gap-3 items-center">
-            <h1 class="font-bold text-4xl">Signup</h1>
+            <h1 class="font-bold text-4xl">Perfil</h1>
             <p class="text-neutral-300 text-center">
-                Aqui te puedes registrar y crear una cuenta
+                Aqui te puedes ver tu informacion y editarla
             </p>
         </div>
         <form class="w-full flex flex-col gap-10 text-xl">
             <div id="inputs-container" class="flex flex-col gap-5">
                 <!--IMPORTANT, ID IS NECESSARY FOR THE JS-->
+                <section class="flex justify-between gap-3 p-0.5 w-full h-[30px]">
+                    <p class="w-full">
+                        Email
+                    </p>
+                    <div class="w-full">User</div>
+                </section>
                 <section id="personal-info" class="flex flex-col gap-3">
                     <h3 class="font-bold text-neutral-600 text-lg">
                         Datos Personales
@@ -46,15 +54,6 @@
                         Datos Inicio de Sesion
                     </h3>
                     <div class="flex flex-col gap-2">
-                        <input type="text" class=" px-3 py-2 border bg-neutral-200 border-neutral-300 rounded"
-                               placeholder="Usuario">
-                        <span class="text-red-500 text-sm hidden"></span>
-                    </div>
-                    <div class="flex flex-col gap-2">
-                        <input type="Email" class=" px-3 py-2 border bg-neutral-200 border-neutral-300 rounded"
-                               placeholder="email">
-                        <span class="text-red-500 text-sm hidden"></span>
-                    </div>
                     <div class="flex flex-col gap-2">
                         <input type="password" class=" px-3 py-2 border bg-neutral-200 border-neutral-300 rounded"
                                placeholder="Contraseña">
@@ -68,12 +67,10 @@
                 </section>
             </div>
             <div class="flex flex-col gap-5">
-                <button id="register-button" type="button" class="rounded px-3 py-2 bg-red-700 text-white">
-                    <span>Signup</span>
+                <button id="update-button" type="button" class="rounded px-3 py-2 bg-red-700 text-white">
+                    <span>Actualizar</span>
                     <span class="hidden w-[30px] h-[30px] border-4 border-black rounded-full border-b-gray-100 spin"></span>
                 </button>
-                <a href="./" class="text-center text-sm text-red-700 hover:underline">Ya tienes una cuenta? Ingresa
-                    aqui</a>
             </div>
         </form>
     </div>

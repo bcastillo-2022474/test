@@ -35,6 +35,10 @@
     @apply rounded w-[20ch] text-sm font-semibold text-start px-2 border-2 py-2 absolute bg-gray-100 z-10 top-full mr-5 text-nowrap
 }
 
+td .tooltip {
+    @apply rounded w-[20ch] text-sm font-semibold text-start px-2 border-2 py-2 absolute bg-gray-100 z-10 top-auto mt-6 mr-5 text-nowrap
+}
+
 input:checked ~ .dot {
   transform: translateX(100%);
   background-color: #bb4863;

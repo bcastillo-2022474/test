@@ -111,6 +111,6 @@ if (mode === 'edit') {
         localStorage.setItem(CONTACTOS, JSON.stringify(contacts));
 
         // redirect to contact page
-        location.href = './contact.html';
+        location.href = './contacts.html';
     });
 }
